@@ -2,7 +2,7 @@ import "./no-network.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { buildBenchmarks } from "./benchmarks.mjs";
+import { buildBenchmarks, comparisonPairs } from "./benchmarks.mjs";
 import { lowRedemption, methodTimings, operatorAnswer, signupAnswers, operatorRedemption, pairAnswers } from "./answer-pages.mjs";
 
 const model = buildBenchmarks(JSON.parse(readFileSync("src/_data/numeric.json", "utf8")),
@@ -19,6 +19,16 @@ test("answer pages reuse selected evidence and name Social Casino Index", () => 
     }
   }
   for (const slug of ["chumba", "mcluck", "wow-vegas"]) assert.match(operatorAnswer(model, slug).summary, /Social Casino Index/);
+});
+
+test("comparison slugs stay stable when operator order changes", () => {
+  const slugs = operators => comparisonPairs(operators).map(pair => pair.join("-vs-"));
+  const published = slugs(model.operators);
+  assert.deepEqual(slugs([...model.operators].reverse()), published);
+  assert.equal(new Set(published.map(slug => slug.split("-vs-").sort().join("|"))).size, published.length);
+  const product = { signup: {}, cash: {}, gift: {} };
+  const extra = [{ slug: "zz-new", product }, { slug: "aa-new", product }];
+  assert.ok(slugs([...model.operators, ...extra]).includes("aa-new-vs-zz-new"));
 });
 
 test("signup answer names every tied leader and separates staged totals", () => {

@@ -60,16 +60,28 @@ export const BENCHMARKS = [
 // least MIN_SHARED_COMPARISON_FIELDS of the five product fields.
 const COMPARISON_FIELDS = ["signup", "purchase", "cash", "gift", "redemption"];
 const MIN_SHARED_COMPARISON_FIELDS = 3;
-const LEGACY_COMPARISONS = [["wow-vegas", "mcluck"], ["wow-vegas", "chumba"], ["mcluck", "chumba"],
-  ["modo", "wow-vegas"], ["crown-coins", "wow-vegas"], ["spree", "mcluck"], ["yay-casino", "wow-vegas"]];
+// Published comparison URLs. Keep these slugs fixed: the slug order inside each
+// pair is part of the public URL. New pairs are appended in alphabetical order.
+const PUBLISHED_COMPARISONS = [["wow-vegas", "mcluck"], ["wow-vegas", "chumba"], ["mcluck", "chumba"],
+  ["modo", "wow-vegas"], ["crown-coins", "wow-vegas"], ["spree", "mcluck"], ["yay-casino", "wow-vegas"],
+  ["yay-casino", "spree"], ["yay-casino", "mcluck"], ["yay-casino", "chumba"], ["yay-casino", "zonko"],
+  ["yay-casino", "lucky-bunny"], ["wow-vegas", "spree"], ["wow-vegas", "zonko"], ["wow-vegas", "lucky-bunny"],
+  ["wow-vegas", "high5"], ["spree", "chumba"], ["spree", "zonko"], ["spree", "modo"], ["spree", "lucky-bunny"],
+  ["spree", "high5"], ["mcluck", "zonko"], ["mcluck", "modo"], ["mcluck", "lucky-bunny"], ["mcluck", "high5"],
+  ["zonko", "lucky-bunny"]];
 
 export function comparisonPairs(operators) {
   const fields = op => COMPARISON_FIELDS.filter(key => op.product?.[key]);
   const shared = (a, b) => fields(a).filter(key => b.product?.[key]).length;
   const bySlug = new Map(operators.map(op => [op.slug, op]));
-  const pairs = LEGACY_COMPARISONS.filter(slugs => slugs.every(slug => bySlug.has(slug)));
+  // A published pair stays live while both operators exist and still share enough
+  // fields; it drops out (and leaves the sitemap) only when evidence disappears.
+  const pairs = PUBLISHED_COMPARISONS.filter((slugs, index) => slugs.every(slug => bySlug.has(slug)) &&
+    (index < 7 || shared(bySlug.get(slugs[0]), bySlug.get(slugs[1])) >= MIN_SHARED_COMPARISON_FIELDS));
   const seen = new Set(pairs.map(slugs => [...slugs].sort().join("|")));
-  const eligible = operators.filter(op => op.productMode !== "entertainment_only" && fields(op).length >= MIN_SHARED_COMPARISON_FIELDS);
+  // Generated pairs use alphabetical slug order so URLs stay stable when ranks change.
+  const eligible = operators.filter(op => op.productMode !== "entertainment_only" && fields(op).length >= MIN_SHARED_COMPARISON_FIELDS)
+    .sort((a, b) => a.slug.localeCompare(b.slug, "en"));
   for (let i = 0; i < eligible.length; i++) for (let j = i + 1; j < eligible.length; j++) {
     const [a, b] = [eligible[i], eligible[j]];
     const key = [a.slug, b.slug].sort().join("|");

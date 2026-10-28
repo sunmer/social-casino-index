@@ -14,6 +14,10 @@ Format:
 
 ---
 
+## 2026-10-28 - Keep comparison URLs stable across daily refreshes
+- The 26 published comparison slugs are now a fixed list; new pairs are appended in alphabetical slug order. Before this, pair order followed operator rank, so a rank change renamed URLs and the daily monitor's release failed on a stale page.
+- The build now clears `docs/compare/` so a pair that loses its evidence leaves no orphaned page.
+
 ## 2026-10-28 - Move the repository to the sunmer account
 - The site now deploys from `sunmer/social-casino-index` (GitHub Pages, `main:/docs`, custom domain socialcasinoindex.com). `www` CNAME points to `sunmer.github.io`.
 - `gqerpjoi23r/social-casino-index` is archived; its workflows no longer run. `FIRECRAWL_API_KEY` is set on the new repo.

@@ -1,5 +1,15 @@
 # Working in this repo
 
+## Repository owner (required)
+
+This product lives under the GitHub account `sunmer` only:
+`https://github.com/sunmer/social-casino-index`. Push branches and open PRs
+there with the `sunmer` login. The old `gqerpjoi23r/social-casino-index` repo
+is archived and the `gqerpjoi23r` account is retired - never push to it or use
+its credentials. Canonical local clone: `~/projects/social-casino-index`.
+DNS for socialcasinoindex.com is at NiceNIC; `www` is a CNAME to
+`sunmer.github.io` and the apex uses the GitHub Pages A records.
+
 Static site (Eleventy + Tailwind) for socialcasinoindex.com, deployed to
 GitHub Pages from `main` / `docs/`. A push to `main` is the deploy.
 

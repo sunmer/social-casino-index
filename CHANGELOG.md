@@ -14,6 +14,11 @@ Format:
 
 ---
 
+## 2026-10-28 - Move the repository to the sunmer account
+- The site now deploys from `sunmer/social-casino-index` (GitHub Pages, `main:/docs`, custom domain socialcasinoindex.com). `www` CNAME points to `sunmer.github.io`.
+- `gqerpjoi23r/social-casino-index` is archived; its workflows no longer run. `FIRECRAWL_API_KEY` is set on the new repo.
+- Push only to sunmer; see "Repository owner" in AGENTS.md.
+
 ## 2026-10-28 - Generate comparisons from shared evidence and add gift-card minimums
 - Publish a comparison page for every non-entertainment pair sharing at least three of signup, purchase, cash, gift and published processing (26 pages, up from 7). The original seven pairs keep their URLs and order; new pairs appear automatically as evidence fills in.
 - Add `/bonuses/gift-card-redemption-minimums/` from the existing gift metric and a `/compare/` index. Related-answer bars link the index instead of listing every pair.
